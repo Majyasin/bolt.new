@@ -4,9 +4,12 @@ import { chatStore } from '~/lib/stores/chat';
 import { classNames } from '~/utils/classNames';
 import { HeaderActionButtons } from './HeaderActionButtons.client';
 import { ChatDescription } from '~/lib/persistence/ChatDescription.client';
+import { ModelSelector } from '../ui/ModelSelector';
+import { useState } from 'react';
 
 export function Header() {
   const chat = useStore(chatStore);
+  const [selectedModel, setSelectedModel] = useState('claude-3.5-sonnet');
 
   return (
     <header
@@ -30,7 +33,12 @@ export function Header() {
       {chat.started && (
         <ClientOnly>
           {() => (
-            <div className="mr-1">
+            <div className="flex items-center gap-3 mr-1">
+              <ModelSelector 
+                selectedModel={selectedModel}
+                onModelChange={setSelectedModel}
+                compact
+              />
               <HeaderActionButtons />
             </div>
           )}
