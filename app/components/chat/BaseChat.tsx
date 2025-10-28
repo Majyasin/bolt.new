@@ -72,11 +72,11 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
         <div ref={scrollRef} className="flex overflow-y-auto w-full h-full">
           <div className={classNames(styles.Chat, 'flex flex-col flex-grow min-w-[var(--chat-min-width)] h-full')}>
             {!chatStarted && (
-              <div id="intro" className="mt-[26vh] max-w-chat mx-auto">
-                <h1 className="text-5xl text-center font-bold text-bolt-elements-textPrimary mb-2">
+              <div id="intro" className="mt-[26vh] max-w-chat mx-auto animated fadeInScale">
+                <h1 className="text-5xl text-center font-bold text-bolt-elements-textPrimary mb-2 bg-gradient-to-r from-accent-500 to-accent-700 bg-clip-text text-transparent">
                   Where ideas begin
                 </h1>
-                <p className="mb-4 text-center text-bolt-elements-textSecondary">
+                <p className="mb-4 text-center text-bolt-elements-textSecondary text-lg">
                   Bring ideas to life in seconds or get help on existing projects.
                 </p>
               </div>
@@ -99,13 +99,13 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                 }}
               </ClientOnly>
               <div
-                className={classNames('relative w-full max-w-chat mx-auto z-prompt', {
+                className={classNames('relative w-full max-w-chat mx-auto z-prompt animated fadeInUp', {
                   'sticky bottom-0': chatStarted,
                 })}
               >
                 <div
                   className={classNames(
-                    'shadow-sm border border-bolt-elements-borderColor bg-bolt-elements-prompt-background backdrop-filter backdrop-blur-[8px] rounded-lg overflow-hidden',
+                    'shadow-lg border border-bolt-elements-borderColor bg-bolt-elements-prompt-background backdrop-filter backdrop-blur-[16px] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl',
                   )}
                 >
                   <textarea
@@ -185,8 +185,8 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
               </div>
             </div>
             {!chatStarted && (
-              <div id="examples" className="relative w-full max-w-xl mx-auto mt-8 flex justify-center">
-                <div className="flex flex-col space-y-2 [mask-image:linear-gradient(to_bottom,black_0%,transparent_180%)] hover:[mask-image:none]">
+              <div id="examples" className="relative w-full max-w-xl mx-auto mt-8 flex justify-center animated fadeInUp" style={{ animationDelay: '0.1s' }}>
+                <div className="flex flex-col space-y-3 [mask-image:linear-gradient(to_bottom,black_0%,transparent_180%)] hover:[mask-image:none]">
                   {EXAMPLE_PROMPTS.map((examplePrompt, index) => {
                     return (
                       <button
@@ -194,10 +194,10 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                         onClick={(event) => {
                           sendMessage?.(event, examplePrompt.text);
                         }}
-                        className="group flex items-center w-full gap-2 justify-center bg-transparent text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary transition-theme"
+                        className="group flex items-center w-full gap-2 justify-center bg-transparent text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary transition-all duration-300 hover:scale-105 px-4 py-2 rounded-lg hover:bg-bolt-elements-item-backgroundActive"
                       >
                         {examplePrompt.text}
-                        <div className="i-ph:arrow-bend-down-left" />
+                        <div className="i-ph:arrow-bend-down-left transition-transform group-hover:translate-x-1" />
                       </button>
                     );
                   })}
