@@ -34,6 +34,8 @@ export class WorkbenchStore {
   showWorkbench: WritableAtom<boolean> = import.meta.hot?.data.showWorkbench ?? atom(false);
   currentView: WritableAtom<WorkbenchViewType> = import.meta.hot?.data.currentView ?? atom('code');
   unsavedFiles: WritableAtom<Set<string>> = import.meta.hot?.data.unsavedFiles ?? atom(new Set<string>());
+  openFiles: WritableAtom<string[]> = import.meta.hot?.data.openFiles ?? atom([]);
+  showFileSearch: WritableAtom<boolean> = import.meta.hot?.data.showFileSearch ?? atom(false);
   modifiedFiles = new Set<string>();
   artifactIdList: string[] = [];
 
@@ -43,7 +45,14 @@ export class WorkbenchStore {
       import.meta.hot.data.unsavedFiles = this.unsavedFiles;
       import.meta.hot.data.showWorkbench = this.showWorkbench;
       import.meta.hot.data.currentView = this.currentView;
+      import.meta.hot.data.openFiles = this.openFiles;
+      import.meta.hot.data.showFileSearch = this.showFileSearch;
     }
+  }
+  
+  toggleFileSearch(value?: boolean) {
+    const currentValue = this.showFileSearch.get();
+    this.showFileSearch.set(value !== undefined ? value : !currentValue);
   }
 
   get previews() {
@@ -151,6 +160,25 @@ export class WorkbenchStore {
 
   setSelectedFile(filePath: string | undefined) {
     this.#editorStore.setSelectedFile(filePath);
+    
+    // Add to open files if not already there
+    if (filePath && !this.openFiles.get().includes(filePath)) {
+      this.openFiles.set([...this.openFiles.get(), filePath]);
+    }
+  }
+
+  closeFile(filePath: string) {
+    const openFiles = this.openFiles.get();
+    const newOpenFiles = openFiles.filter(f => f !== filePath);
+    this.openFiles.set(newOpenFiles);
+    
+    // If closing the currently selected file, select another one
+    const currentFile = this.selectedFile.get();
+    if (currentFile === filePath && newOpenFiles.length > 0) {
+      this.setSelectedFile(newOpenFiles[newOpenFiles.length - 1]);
+    } else if (newOpenFiles.length === 0) {
+      this.setSelectedFile(undefined);
+    }
   }
 
   async saveFile(filePath: string) {

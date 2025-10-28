@@ -16,6 +16,7 @@ import { cubicEasingFn } from '~/utils/easings';
 import { renderLogger } from '~/utils/logger';
 import { EditorPanel } from './EditorPanel';
 import { Preview } from './Preview';
+import { FileSearch } from './FileSearch';
 
 interface WorkspaceProps {
   chatStarted?: boolean;
@@ -62,6 +63,7 @@ export const Workbench = memo(({ chatStarted, isStreaming }: WorkspaceProps) => 
   const unsavedFiles = useStore(workbenchStore.unsavedFiles);
   const files = useStore(workbenchStore.files);
   const selectedView = useStore(workbenchStore.currentView);
+  const showFileSearch = useStore(workbenchStore.showFileSearch);
 
   const setSelectedView = (view: WorkbenchViewType) => {
     workbenchStore.currentView.set(view);
@@ -101,12 +103,19 @@ export const Workbench = memo(({ chatStarted, isStreaming }: WorkspaceProps) => 
 
   return (
     chatStarted && (
-      <motion.div
-        initial="closed"
-        animate={showWorkbench ? 'open' : 'closed'}
-        variants={workbenchVariants}
-        className="z-workbench"
-      >
+      <>
+        <FileSearch
+          files={files}
+          onFileSelect={onFileSelect}
+          isOpen={showFileSearch}
+          onClose={() => workbenchStore.toggleFileSearch(false)}
+        />
+        <motion.div
+          initial="closed"
+          animate={showWorkbench ? 'open' : 'closed'}
+          variants={workbenchVariants}
+          className="z-workbench"
+        >
         <div
           className={classNames(
             'fixed top-[calc(var(--header-height)+1.5rem)] bottom-6 w-[var(--workbench-inner-width)] mr-4 z-0 transition-[left,width] duration-200 bolt-ease-cubic-bezier',
@@ -170,6 +179,7 @@ export const Workbench = memo(({ chatStarted, isStreaming }: WorkspaceProps) => 
           </div>
         </div>
       </motion.div>
+      </>
     )
   );
 });
