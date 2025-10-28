@@ -22,7 +22,10 @@ import { renderLogger } from '~/utils/logger';
 import { isMobile } from '~/utils/mobile';
 import { FileBreadcrumb } from './FileBreadcrumb';
 import { FileTree } from './FileTree';
+import { FileTabs, type FileTab } from './FileTabs';
 import { Terminal, type TerminalRef } from './terminal/Terminal';
+import { AIAssistant } from './AIAssistant';
+import { GitStatus } from './GitStatus';
 
 interface EditorPanelProps {
   files?: FileMap;
@@ -67,6 +70,16 @@ export const EditorPanel = memo(
 
     const [activeTerminal, setActiveTerminal] = useState(0);
     const [terminalCount, setTerminalCount] = useState(1);
+    const [showAIAssistant, setShowAIAssistant] = useState(false);
+    
+    const openFiles = useStore(workbenchStore.openFiles);
+    
+    const fileTabs: FileTab[] = useMemo(() => {
+      return openFiles.map(filePath => ({
+        filePath,
+        isUnsaved: unsavedFiles?.has(filePath) || false,
+      }));
+    }, [openFiles, unsavedFiles]);
 
     const activeFileSegments = useMemo(() => {
       if (!editorDocument) {
@@ -123,14 +136,26 @@ export const EditorPanel = memo(
     };
 
     return (
-      <PanelGroup direction="vertical">
+      <>
+        {showAIAssistant && (
+          <AIAssistant
+            filePath={selectedFile}
+            onClose={() => setShowAIAssistant(false)}
+          />
+        )}
+        <PanelGroup direction="vertical">
         <Panel defaultSize={showTerminal ? DEFAULT_EDITOR_SIZE : 100} minSize={20}>
           <PanelGroup direction="horizontal">
             <Panel defaultSize={20} minSize={10} collapsible>
               <div className="flex flex-col border-r border-bolt-elements-borderColor h-full">
                 <PanelHeader>
-                  <div className="i-ph:tree-structure-duotone shrink-0" />
-                  Files
+                  <div className="flex items-center justify-between flex-1">
+                    <div className="flex items-center gap-2">
+                      <div className="i-ph:tree-structure-duotone shrink-0" />
+                      Files
+                    </div>
+                    <GitStatus />
+                  </div>
                 </PanelHeader>
                 <FileTree
                   className="h-full"
@@ -145,22 +170,37 @@ export const EditorPanel = memo(
             </Panel>
             <PanelResizeHandle />
             <Panel className="flex flex-col" defaultSize={80} minSize={20}>
+              <FileTabs 
+                tabs={fileTabs}
+                selectedFile={selectedFile}
+                onFileSelect={(filePath) => onFileSelect?.(filePath)}
+                onFileClose={(filePath) => workbenchStore.closeFile(filePath)}
+              />
               <PanelHeader className="overflow-x-auto">
                 {activeFileSegments?.length && (
                   <div className="flex items-center flex-1 text-sm">
                     <FileBreadcrumb pathSegments={activeFileSegments} files={files} onFileSelect={onFileSelect} />
-                    {activeFileUnsaved && (
-                      <div className="flex gap-1 ml-auto -mr-1.5">
-                        <PanelHeaderButton onClick={onFileSave}>
-                          <div className="i-ph:floppy-disk-duotone" />
-                          Save
-                        </PanelHeaderButton>
-                        <PanelHeaderButton onClick={onFileReset}>
-                          <div className="i-ph:clock-counter-clockwise-duotone" />
-                          Reset
-                        </PanelHeaderButton>
-                      </div>
-                    )}
+                    <div className="flex gap-1 ml-auto -mr-1.5">
+                      <PanelHeaderButton
+                        onClick={() => setShowAIAssistant(!showAIAssistant)}
+                        className={classNames({ 'text-accent-500': showAIAssistant })}
+                      >
+                        <div className="i-ph:sparkle-duotone" />
+                        AI
+                      </PanelHeaderButton>
+                      {activeFileUnsaved && (
+                        <>
+                          <PanelHeaderButton onClick={onFileSave}>
+                            <div className="i-ph:floppy-disk-duotone" />
+                            Save
+                          </PanelHeaderButton>
+                          <PanelHeaderButton onClick={onFileReset}>
+                            <div className="i-ph:clock-counter-clockwise-duotone" />
+                            Reset
+                          </PanelHeaderButton>
+                        </>
+                      )}
+                    </div>
                   </div>
                 )}
               </PanelHeader>
@@ -251,6 +291,7 @@ export const EditorPanel = memo(
           </div>
         </Panel>
       </PanelGroup>
+      </>
     );
   },
 );

@@ -13,6 +13,11 @@ export interface Shortcut {
 
 export interface Shortcuts {
   toggleTerminal: Shortcut;
+  openFileSearch: Shortcut;
+  openCommandPalette: Shortcut;
+  openSnippets: Shortcut;
+  openComponents: Shortcut;
+  openAssets: Shortcut;
 }
 
 export interface Settings {
@@ -24,6 +29,34 @@ export const shortcutsStore = map<Shortcuts>({
     key: 'j',
     ctrlOrMetaKey: true,
     action: () => workbenchStore.toggleTerminal(),
+  },
+  openFileSearch: {
+    key: 'p',
+    ctrlOrMetaKey: true,
+    action: () => workbenchStore.toggleFileSearch(),
+  },
+  openCommandPalette: {
+    key: 'k',
+    ctrlOrMetaKey: true,
+    action: () => workbenchStore.toggleCommandPalette(),
+  },
+  openSnippets: {
+    key: 's',
+    ctrlOrMetaKey: true,
+    shiftKey: true,
+    action: () => workbenchStore.toggleSnippets(),
+  },
+  openComponents: {
+    key: 'u',
+    ctrlOrMetaKey: true,
+    shiftKey: true,
+    action: () => workbenchStore.toggleComponents(),
+  },
+  openAssets: {
+    key: 'm',
+    ctrlOrMetaKey: true,
+    shiftKey: true,
+    action: () => workbenchStore.toggleAssets(),
   },
 });
 

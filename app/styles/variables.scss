@@ -63,7 +63,12 @@
 
   --bolt-elements-dividerColor: theme('colors.gray.100');
 
-  --bolt-elements-prompt-background: theme('colors.alpha.white.80');
+  --bolt-elements-prompt-background: rgba(255, 255, 255, 0.8);
+  
+  /* Enhanced glassmorphism effects */
+  --bolt-glass-background: rgba(255, 255, 255, 0.7);
+  --bolt-glass-border: rgba(255, 255, 255, 0.3);
+  --bolt-glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 
   --bolt-elements-sidebar-dropdownShadow: theme('colors.alpha.gray.10');
   --bolt-elements-sidebar-buttonBackgroundDefault: theme('colors.alpha.accent.10');
@@ -169,7 +174,12 @@
 
   --bolt-elements-dividerColor: theme('colors.gray.100');
 
-  --bolt-elements-prompt-background: theme('colors.alpha.gray.80');
+  --bolt-elements-prompt-background: rgba(23, 23, 23, 0.8);
+  
+  /* Enhanced glassmorphism effects */
+  --bolt-glass-background: rgba(23, 23, 23, 0.7);
+  --bolt-glass-border: rgba(255, 255, 255, 0.1);
+  --bolt-glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 
   --bolt-elements-sidebar-dropdownShadow: theme('colors.alpha.gray.30');
   --bolt-elements-sidebar-buttonBackgroundDefault: theme('colors.alpha.accent.10');
