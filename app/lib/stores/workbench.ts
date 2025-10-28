@@ -36,6 +36,10 @@ export class WorkbenchStore {
   unsavedFiles: WritableAtom<Set<string>> = import.meta.hot?.data.unsavedFiles ?? atom(new Set<string>());
   openFiles: WritableAtom<string[]> = import.meta.hot?.data.openFiles ?? atom([]);
   showFileSearch: WritableAtom<boolean> = import.meta.hot?.data.showFileSearch ?? atom(false);
+  showCommandPalette: WritableAtom<boolean> = import.meta.hot?.data.showCommandPalette ?? atom(false);
+  showSnippets: WritableAtom<boolean> = import.meta.hot?.data.showSnippets ?? atom(false);
+  showComponents: WritableAtom<boolean> = import.meta.hot?.data.showComponents ?? atom(false);
+  showAssets: WritableAtom<boolean> = import.meta.hot?.data.showAssets ?? atom(false);
   modifiedFiles = new Set<string>();
   artifactIdList: string[] = [];
 
@@ -53,6 +57,26 @@ export class WorkbenchStore {
   toggleFileSearch(value?: boolean) {
     const currentValue = this.showFileSearch.get();
     this.showFileSearch.set(value !== undefined ? value : !currentValue);
+  }
+
+  toggleCommandPalette(value?: boolean) {
+    const currentValue = this.showCommandPalette.get();
+    this.showCommandPalette.set(value !== undefined ? value : !currentValue);
+  }
+
+  toggleSnippets(value?: boolean) {
+    const currentValue = this.showSnippets.get();
+    this.showSnippets.set(value !== undefined ? value : !currentValue);
+  }
+
+  toggleComponents(value?: boolean) {
+    const currentValue = this.showComponents.get();
+    this.showComponents.set(value !== undefined ? value : !currentValue);
+  }
+
+  toggleAssets(value?: boolean) {
+    const currentValue = this.showAssets.get();
+    this.showAssets.set(value !== undefined ? value : !currentValue);
   }
 
   get previews() {

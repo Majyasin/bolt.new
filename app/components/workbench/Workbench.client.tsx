@@ -17,6 +17,10 @@ import { renderLogger } from '~/utils/logger';
 import { EditorPanel } from './EditorPanel';
 import { Preview } from './Preview';
 import { FileSearch } from './FileSearch';
+import { CommandPalette } from '../features/CommandPalette';
+import { CodeSnippets } from '../features/CodeSnippets';
+import { ComponentLibrary } from '../features/ComponentLibrary';
+import { AssetManager } from '../features/AssetManager';
 
 interface WorkspaceProps {
   chatStarted?: boolean;
@@ -64,6 +68,10 @@ export const Workbench = memo(({ chatStarted, isStreaming }: WorkspaceProps) => 
   const files = useStore(workbenchStore.files);
   const selectedView = useStore(workbenchStore.currentView);
   const showFileSearch = useStore(workbenchStore.showFileSearch);
+  const showCommandPalette = useStore(workbenchStore.showCommandPalette);
+  const showSnippets = useStore(workbenchStore.showSnippets);
+  const showComponents = useStore(workbenchStore.showComponents);
+  const showAssets = useStore(workbenchStore.showAssets);
 
   const setSelectedView = (view: WorkbenchViewType) => {
     workbenchStore.currentView.set(view);
@@ -110,6 +118,19 @@ export const Workbench = memo(({ chatStarted, isStreaming }: WorkspaceProps) => 
           isOpen={showFileSearch}
           onClose={() => workbenchStore.toggleFileSearch(false)}
         />
+        <CommandPalette
+          isOpen={showCommandPalette}
+          onClose={() => workbenchStore.toggleCommandPalette(false)}
+        />
+        {showSnippets && (
+          <CodeSnippets onClose={() => workbenchStore.toggleSnippets(false)} />
+        )}
+        {showComponents && (
+          <ComponentLibrary onClose={() => workbenchStore.toggleComponents(false)} />
+        )}
+        {showAssets && (
+          <AssetManager onClose={() => workbenchStore.toggleAssets(false)} />
+        )}
         <motion.div
           initial="closed"
           animate={showWorkbench ? 'open' : 'closed'}
